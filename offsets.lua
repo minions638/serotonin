@@ -385,8 +385,18 @@ local classes = {}; do
     local workspace = game.GetService('Workspace')
     local screen_gui = game.LocalPlayer.PlayerGui:FindFirstChild('ScreenGui')
 
+    classes.Bone = {
+        TransformPosition = {workspace:FindFirstChild('BonePart'):FindFirstChildOfClass('Bone'), 'float', 292, 'Vector3'}
+    }
+
     classes.Attachment = {
-        Position = {storage:FindFirstChildOfClass('Attachment'), 'float', 3411, 'Vector3'}
+        Position = {storage:FindFirstChildOfClass('Attachment'), 'float', 3411, 'Vector3'},
+        TransformPosition = {workspace:FindFirstChild('Part1'):FindFirstChildOfClass('Attachment'), 'float', 3722, 'Vector3'}
+    }
+
+    local humanoid = workspace:FindFirstChild('Rig'):FindFirstChildOfClass('Humanoid')
+    classes.Humanoid = {
+        WalkToPoint = {humanoid, 'float', 5732, 'Vector3'}
     }
 
     local surface_appearance = workspace:FindFirstChild('SurfacePart'):FindFirstChild('SurfaceAppearance')
@@ -413,7 +423,8 @@ local classes = {}; do
     }
 
     classes.TextBox = {
-        Text = {screen_gui:FindFirstChildOfClass('TextBox'), 'string', 'TextBoxText'}
+        Text = {screen_gui:FindFirstChildOfClass('TextBox'), 'string', 'TextBoxText'},
+        TextColor3 = {screen_gui:FindFirstChildOfClass('TextBox'), 'float', 0.36, 'Vector3'}
     }
 
     local image_label = screen_gui:FindFirstChildOfClass('ImageLabel')
@@ -421,6 +432,22 @@ local classes = {}; do
         Image = {image_label, 'string', 'rbxassetid://ImageLabelImage'},
         ImageColor3 = {image_label, 'float', 0.36, 'Vector3'},
         ImageTransparency = {image_label, 'float', 0.58}
+    }
+
+    local image_button = screen_gui:FindFirstChildOfClass('ImageButton')
+    classes.ImageButton = {
+        Image = {image_button, 'string', 'rbxassetid://ImageLabelImage'},
+        ImageColor3 = {image_button, 'float', 0.36, 'Vector3'},
+        ImageTransparency = {image_button, 'float', 0.58}
+    }
+
+    local smoke = storage:FindFirstChildOfClass('Smoke')
+    classes.Smoke = {
+        Color = {smoke, 'float', 0.36, 'Vector3'},
+        Opacity = {smoke, 'float', 0.64},
+        Size = {smoke, 'float', 76},
+        TimeScale = {smoke, 'float', 4722},
+        RiseVelocity = {smoke, 'float', 17}
     }
 
     local sound = storage:FindFirstChildOfClass('Sound')
@@ -457,12 +484,30 @@ local classes = {}; do
     classes.Light = {
         Color = {spot_light, 'float', 0.36, 'Vector3'},
         Angle = {spot_light, 'float', 162},
-        Range = {spot_light, 'float', 34},
+        Range = {spot_light, 'float', 75.3},
         Brightness = {spot_light, 'float', 23}
+    }
+
+    local trail = storage:FindFirstChildOfClass('Trail')
+    classes.Trail = {
+        Color = {trail, 'float', 0.36, 'Vector3'},
+        Brightness = {trail, 'float', 563},
+        Texture = {trail, 'string', 'rbxassetid://Texture'},
+        TextureLength = {trail, 'float', 231},
+        Attachment0 = {trail, 'pointer', trail:FindFirstChild('0').Address},
+        Attachment1 = {trail, 'pointer', trail:FindFirstChild('1').Address},
+        Lifetime = {trail, 'float', 13.4},
+        MinLength = {trail, 'float', 245},
+        MaxLength = {trail, 'float', 473},
+        WidthScale = {trail, 'float', 34},
+        LightEmission = {trail, 'float', 0.67},
+        LightInfluence = {trail, 'float', 0.75}
     }
 
     local beam = storage:FindFirstChildOfClass('Beam')
     classes.Beam = {
+        Color = {beam, 'float', 0.36, 'Vector3'},
+        Brightness = {beam, 'float', 563},
         Texture = {beam, 'string', 'rbxassetid://Texture'},
         TextureLength = {beam, 'float', 231},
         TextureSpeed = {beam, 'float', 472},
@@ -492,7 +537,8 @@ for name, properties in pairs(classes) do
         local address = type(property[1]) == 'number' and property[1] or property[1].Address
         for i = 0, 10000 do
             local memory_value = memory.read(property[2], address + i)
-            if memory_value == value or type(value) == 'number' and memory_value > value - 0.25 and memory_value < value + 0.25 then
+
+            if memory_value == value or type(value) == 'number' and memory_value > value - 0.025 and memory_value < value + 0.025 then
                 offsets[name][property_name] = {string.format('0x%X', i), property[2], property[4]}
                 success[#success+1] = name .. "." .. property_name
                 break
@@ -575,6 +621,7 @@ local function table_to_lua(tbl, indent) -- made by chatgpt
 end
 
 file.write(version .. '.json', json.encode(offsets))
+file.write(version .. '.lua', 'local offsets = ' .. table_to_lua(offsets))
 utility.set_clipboard('local offsets = ' .. table_to_lua(offsets))
 
 print('Success: ' .. table.concat(success, ', '))
