@@ -75,6 +75,11 @@
             "float",
             "CFrame"
         ],
+        "Color": [
+            404,
+            "byte",
+            "Color3_RGB"
+        ],
         "Material": [
             566,
             "short"
@@ -88,9 +93,17 @@
             328,
             "pointer"
         ],
+        "Reflectance": [
+            236,
+            "float"
+        ],
         "Shape": [
             433,
             "int"
+        ],
+        "Transparency": [
+            240,
+            "float"
         ]
     },
     "Beam": {
