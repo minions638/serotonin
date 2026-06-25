@@ -5,10 +5,30 @@
             "string"
         ]
     },
-    "AnimationTrack": [
-    ],
-    "Animator": [
-    ],
+    "AnimationTrack": {
+        "Animation": [
+            208,
+            "pointer"
+        ],
+        "Speed": [
+            228,
+            "float"
+        ],
+        "TimePosition": [
+            232,
+            "float"
+        ],
+        "WeightTarget": [
+            236,
+            "float"
+        ]
+    },
+    "Animator": {
+        "TrackList": [
+            2536,
+            "pointer"
+        ]
+    },
     "Atmosphere": {
         "Color": [
             208,
