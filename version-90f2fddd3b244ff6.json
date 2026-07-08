@@ -1,0 +1,1498 @@
+{
+    "Animation": {
+        "AnimationId": [
+            192,
+            "string"
+        ]
+    },
+    "AnimationTrack": {
+        "Animation": [
+            184,
+            "pointer"
+        ],
+        "Speed": [
+            212,
+            "float"
+        ],
+        "TimePosition": [
+            216,
+            "float"
+        ],
+        "WeightTarget": [
+            220,
+            "float"
+        ]
+    },
+    "Animator": {
+        "TrackList": [
+            2592,
+            "pointer"
+        ]
+    },
+    "Atmosphere": {
+        "Color": [
+            184,
+            "float",
+            "Color3"
+        ],
+        "Decay": [
+            196,
+            "float",
+            "Color3"
+        ],
+        "Density": [
+            208,
+            "float"
+        ],
+        "Glare": [
+            212,
+            "float"
+        ],
+        "Haze": [
+            216,
+            "float"
+        ],
+        "Offset": [
+            220,
+            "float"
+        ]
+    },
+    "Attachment": {
+        "Transform": [
+            160,
+            "float",
+            "CFrame"
+        ],
+        "TransformPosition": [
+            196,
+            "float",
+            "Vector3"
+        ]
+    },
+    "BasePart": {
+        "CFrame": [
+            200,
+            "float",
+            "CFrame"
+        ],
+        "Color": [
+            328,
+            "byte",
+            "Color3_RGB"
+        ],
+        "Material": [
+            574,
+            "short"
+        ],
+        "Position": [
+            236,
+            "float",
+            "Vector3"
+        ],
+        "Primitive": [
+            296,
+            "pointer"
+        ],
+        "Reflectance": [
+            204,
+            "float"
+        ],
+        "Shape": [
+            345,
+            "int"
+        ],
+        "Transparency": [
+            208,
+            "float"
+        ]
+    },
+    "Beam": {
+        "Attachment0": [
+            352,
+            "pointer"
+        ],
+        "Attachment1": [
+            368,
+            "pointer"
+        ],
+        "Brightness": [
+            384,
+            "float"
+        ],
+        "Color": [
+            264,
+            "float",
+            "ColorSequence"
+        ],
+        "ColorArray": [
+            248,
+            "pointer"
+        ],
+        "ColorCount": [
+            256,
+            "int"
+        ],
+        "CurveSize0": [
+            388,
+            "float"
+        ],
+        "CurveSize1": [
+            392,
+            "float"
+        ],
+        "LightEmission": [
+            396,
+            "float"
+        ],
+        "LightInfluence": [
+            400,
+            "float"
+        ],
+        "Segments": [
+            408,
+            "int"
+        ],
+        "Texture": [
+            320,
+            "string"
+        ],
+        "TextureLength": [
+            412,
+            "float"
+        ],
+        "TextureMode": [
+            416,
+            "int"
+        ],
+        "TextureSpeed": [
+            420,
+            "float"
+        ],
+        "Transparency": [
+            204,
+            "float"
+        ],
+        "TransparencyArray": [
+            184,
+            "pointer"
+        ],
+        "TransparencyCount": [
+            192,
+            "int"
+        ],
+        "Width0": [
+            424,
+            "float"
+        ],
+        "Width1": [
+            428,
+            "float"
+        ],
+        "ZOffset": [
+            432,
+            "float"
+        ]
+    },
+    "BillboardGui": {
+        "Adornee": [
+            1856,
+            "pointer"
+        ],
+        "Brightness": [
+            1960,
+            "float"
+        ],
+        "ExtentsOffset": [
+            1904,
+            "float",
+            "Vector3"
+        ],
+        "ExtentsOffsetWorldSpace": [
+            1916,
+            "float",
+            "Vector3"
+        ],
+        "LightInfluence": [
+            1980,
+            "float"
+        ],
+        "MaxDistance": [
+            1984,
+            "float"
+        ],
+        "SizeOffset": [
+            1952,
+            "float",
+            "Vector2"
+        ],
+        "StudsOffset": [
+            1928,
+            "float",
+            "Vector3"
+        ],
+        "StudsOffsetWorldSpace": [
+            1940,
+            "float",
+            "Vector3"
+        ]
+    },
+    "BlockMesh": {
+        "Offset": [
+            184,
+            "float",
+            "Vector3"
+        ],
+        "Scale": [
+            196,
+            "float",
+            "Vector3"
+        ],
+        "VertexColor": [
+            208,
+            "float",
+            "Vector3"
+        ]
+    },
+    "BloomEffect": {
+        "Enabled": [
+            176,
+            "byte"
+        ],
+        "Intensity": [
+            184,
+            "float"
+        ],
+        "Size": [
+            188,
+            "float"
+        ],
+        "Threshold": [
+            192,
+            "float"
+        ]
+    },
+    "BlurEffect": {
+        "Enabled": [
+            176,
+            "byte"
+        ],
+        "Size": [
+            184,
+            "float"
+        ]
+    },
+    "BodyColors": {
+        "HeadColor": [
+            196,
+            "float",
+            "Color3"
+        ],
+        "LeftArmColor": [
+            212,
+            "float",
+            "Color3"
+        ],
+        "LeftLegColor": [
+            228,
+            "float",
+            "Color3"
+        ],
+        "RightArmColor": [
+            244,
+            "float",
+            "Color3"
+        ],
+        "RightLegColor": [
+            260,
+            "float",
+            "Color3"
+        ],
+        "TorsoColor": [
+            276,
+            "float",
+            "Color3"
+        ]
+    },
+    "BodyVelocity": {
+        "MaxForce": [
+            648,
+            "float",
+            "Vector3"
+        ],
+        "P": [
+            672,
+            "float"
+        ],
+        "Velocity": [
+            660,
+            "float",
+            "Vector3"
+        ]
+    },
+    "Bone": {
+        "CFrame": [
+            184,
+            "float",
+            "BoneCFrame"
+        ],
+        "Transform": [
+            384,
+            "float",
+            "CFrame"
+        ]
+    },
+    "BrickColorValue": {
+        "Value": [
+            184,
+            "int"
+        ]
+    },
+    "BubbleChatConfiguration": {
+        "BackgroundColor3": [
+            240,
+            "float",
+            "Color3"
+        ],
+        "BackgroundTransparency": [
+            216,
+            "double"
+        ],
+        "BubbleDuration": [
+            276,
+            "float"
+        ],
+        "BubblesSpacing": [
+            280,
+            "float"
+        ],
+        "LocalPlayerStudsOffset": [
+            252,
+            "float",
+            "Vector3"
+        ],
+        "MaxBubbles": [
+            284,
+            "float"
+        ],
+        "MaxDistance": [
+            288,
+            "float"
+        ],
+        "MinimizeDistance": [
+            292,
+            "float"
+        ]
+    },
+    "Camera": {
+        "CFrame": [
+            216,
+            "float",
+            "CFrame"
+        ],
+        "Position": [
+            252,
+            "float",
+            "Vector3"
+        ]
+    },
+    "CharacterMesh": {
+        "BaseTextureContent": [
+            200,
+            "string"
+        ],
+        "BodyPart": [
+            328,
+            "int"
+        ],
+        "MeshContent": [
+            248,
+            "string"
+        ],
+        "OverlayTextureContent": [
+            296,
+            "string"
+        ]
+    },
+    "ChatWindowConfiguration": {
+        "BackgroundColor3": [
+            216,
+            "float",
+            "Color3"
+        ],
+        "BackgroundTransparency": [
+            184,
+            "double"
+        ],
+        "Enabled": [
+            284,
+            "byte"
+        ],
+        "HeightScale": [
+            268,
+            "float"
+        ],
+        "WidthScale": [
+            280,
+            "float"
+        ]
+    },
+    "Clouds": {
+        "Color": [
+            176,
+            "float",
+            "Color3"
+        ],
+        "Cover": [
+            188,
+            "float"
+        ],
+        "Density": [
+            192,
+            "float"
+        ]
+    },
+    "Color3Value": {
+        "Value": [
+            184,
+            "float",
+            "Color3"
+        ]
+    },
+    "ColorCorrectionEffect": {
+        "Brightness": [
+            196,
+            "float"
+        ],
+        "Color": [
+            180,
+            "float",
+            "Color3"
+        ],
+        "Contrast": [
+            200,
+            "float"
+        ],
+        "Enabled": [
+            176,
+            "byte"
+        ],
+        "Saturation": [
+            204,
+            "float"
+        ]
+    },
+    "ControllerManager": {
+        "BaseMoveSpeed": [
+            284,
+            "float"
+        ],
+        "BaseTurnSpeed": [
+            288,
+            "float"
+        ],
+        "FacingDirection": [
+            248,
+            "float",
+            "Vector3"
+        ],
+        "MovingDirection": [
+            248,
+            "float",
+            "Vector3"
+        ],
+        "UpDirection": [
+            272,
+            "float",
+            "Vector3"
+        ]
+    },
+    "ControllerPartSensor": {
+        "HitFrame": [
+            592,
+            "float",
+            "CFrame"
+        ],
+        "SearchDistance": [
+            648,
+            "float"
+        ],
+        "SensedPart": [
+            576,
+            "pointer"
+        ]
+    },
+    "Decal": {
+        "Color3": [
+            488,
+            "float",
+            "Color3"
+        ],
+        "ColorMapContent": [
+            384,
+            "string"
+        ],
+        "Face": [
+            208,
+            "int"
+        ],
+        "OffsetStudsU": [
+            500,
+            "float"
+        ],
+        "OffsetStudsV": [
+            504,
+            "float"
+        ],
+        "StudsPerTileU": [
+            508,
+            "float"
+        ],
+        "StudsPerTileV": [
+            512,
+            "float"
+        ],
+        "Transparency": [
+            532,
+            "float"
+        ]
+    },
+    "DoubleConstrainedValue": {
+        "MaxValue": [
+            184,
+            "double"
+        ],
+        "MinValue": [
+            192,
+            "double"
+        ],
+        "Value": [
+            200,
+            "double"
+        ]
+    },
+    "EqualizerSoundEffect": {
+        "Enabled": [
+            188,
+            "byte"
+        ],
+        "HighGain": [
+            232,
+            "float"
+        ],
+        "LowGain": [
+            236,
+            "float"
+        ],
+        "MidGain": [
+            236,
+            "float"
+        ],
+        "Priority": [
+            184,
+            "float"
+        ]
+    },
+    "Game": {
+        "GameId": [
+            392,
+            "uint64"
+        ],
+        "JobId": [
+            288,
+            "string"
+        ],
+        "PlaceId": [
+            400,
+            "uint64"
+        ],
+        "PlaceVersion": [
+            428,
+            "int"
+        ]
+    },
+    "GroundController": {
+        "AccelerationTime": [
+            228,
+            "float"
+        ],
+        "BalanceMaxTorque": [
+            232,
+            "float"
+        ],
+        "BalanceSpeed": [
+            236,
+            "float"
+        ],
+        "DecelerationTime": [
+            240,
+            "float"
+        ],
+        "Friction": [
+            244,
+            "float"
+        ],
+        "FrictionWeight": [
+            248,
+            "float"
+        ],
+        "GroundOffset": [
+            252,
+            "float"
+        ],
+        "MoveSpeedFactor": [
+            184,
+            "float"
+        ],
+        "TurnSpeedFactor": [
+            264,
+            "float"
+        ]
+    },
+    "GuiObject": {
+        "AbsolutePosition": [
+            248,
+            "float",
+            "Vector2"
+        ],
+        "AbsoluteSize": [
+            256,
+            "float",
+            "Vector2"
+        ],
+        "BackgroundColor3": [
+            1344,
+            "float",
+            "Color3"
+        ],
+        "BackgroundTransparency": [
+            1380,
+            "float"
+        ],
+        "BorderColor3": [
+            1356,
+            "float",
+            "Color3"
+        ],
+        "Position": [
+            1296,
+            "float",
+            "UDim2"
+        ],
+        "Size": [
+            1328,
+            "float",
+            "UDim2"
+        ],
+        "Visible": [
+            1453,
+            "byte"
+        ]
+    },
+    "Humanoid": {
+        "CameraOffset": [
+            296,
+            "float",
+            "Vector3"
+        ],
+        "MaxSlopeAngle": [
+            428,
+            "float"
+        ],
+        "WalkToPoint": [
+            356,
+            "float",
+            "Vector3"
+        ]
+    },
+    "ImageLabel": {
+        "Image": [
+            2576,
+            "string"
+        ],
+        "ImageColor3": [
+            2640,
+            "float",
+            "Color3"
+        ],
+        "ImageTransparency": [
+            2676,
+            "float"
+        ]
+    },
+    "Instance": {
+        "ChildrenEnd": [
+            8,
+            "pointer"
+        ],
+        "ChildrenStart": [
+            56,
+            "pointer"
+        ],
+        "ClassDescriptor": [
+            24,
+            "pointer"
+        ],
+        "ClassName": [
+            8,
+            "pointer"
+        ],
+        "Name": [
+            152,
+            "pointer"
+        ],
+        "Parent": [
+            104,
+            "pointer"
+        ]
+    },
+    "IntValue": {
+        "Value": [
+            184,
+            "int"
+        ]
+    },
+    "Lighting": {
+        "Ambient": [
+            200,
+            "float",
+            "Color3"
+        ],
+        "Brightness": [
+            272,
+            "float"
+        ],
+        "ClockTime": [
+            424,
+            "uint64"
+        ],
+        "ColorShiftBottom": [
+            212,
+            "float",
+            "Color3"
+        ],
+        "ColorShiftTop": [
+            224,
+            "float",
+            "Color3"
+        ],
+        "EnvironmentDiffuseScale": [
+            276,
+            "float"
+        ],
+        "EnvironmentSpecularScale": [
+            280,
+            "float"
+        ],
+        "ExposureCompensation": [
+            284,
+            "float"
+        ],
+        "FogColor": [
+            200,
+            "float",
+            "Color3"
+        ],
+        "FogEnd": [
+            292,
+            "float"
+        ],
+        "FogStart": [
+            296,
+            "float"
+        ],
+        "GeographicLatitude": [
+            384,
+            "float"
+        ],
+        "OutdoorAmbient": [
+            248,
+            "float",
+            "Color3"
+        ]
+    },
+    "LinearVelocity": {
+        "MaxForce": [
+            408,
+            "float"
+        ],
+        "VectorVelocity": [
+            588,
+            "float",
+            "Vector3"
+        ]
+    },
+    "MeshPart": {
+        "MeshId": [
+            656,
+            "string"
+        ],
+        "MeshSize": [
+            456,
+            "float",
+            "Vector3"
+        ],
+        "TextureId": [
+            704,
+            "string"
+        ]
+    },
+    "Model": {
+        "PrimaryPart": [
+            600,
+            "pointer"
+        ],
+        "Scale": [
+            324,
+            "float"
+        ],
+        "StreamingMode": [
+            320,
+            "int"
+        ]
+    },
+    "Motor6D": {
+        "C0": [
+            56,
+            "float",
+            "CFrame"
+        ],
+        "C1": [
+            104,
+            "float",
+            "CFrame"
+        ],
+        "Part0": [
+            280,
+            "pointer"
+        ],
+        "Part1": [
+            296,
+            "pointer"
+        ],
+        "Primitive1": [
+            8,
+            "pointer"
+        ],
+        "Primitive2": [
+            264,
+            "pointer"
+        ]
+    },
+    "NumberValue": {
+        "Value": [
+            184,
+            "double"
+        ]
+    },
+    "ObjectValue": {
+        "Value": [
+            184,
+            "pointer"
+        ]
+    },
+    "Pants": {
+        "Color3": [
+            288,
+            "float",
+            "Color3"
+        ],
+        "Template": [
+            208,
+            "string"
+        ]
+    },
+    "ParticleEmitter": {
+        "Acceleration": [
+            480,
+            "float",
+            "Vector3"
+        ],
+        "Brightness": [
+            540,
+            "float"
+        ],
+        "Color": [
+            392,
+            "float",
+            "ColorSequence"
+        ],
+        "ColorArray": [
+            376,
+            "pointer"
+        ],
+        "ColorCount": [
+            384,
+            "int"
+        ],
+        "EmissionDirection": [
+            548,
+            "int"
+        ],
+        "FlipbookBlendFrames": [
+            617,
+            "byte"
+        ],
+        "FlipbookFrameRateMax": [
+            496,
+            "float"
+        ],
+        "FlipbookFrameRateMin": [
+            492,
+            "float"
+        ],
+        "FlipbookLayout": [
+            552,
+            "int"
+        ],
+        "FlipbookMode": [
+            556,
+            "int"
+        ],
+        "FlipbookSizeX": [
+            560,
+            "int"
+        ],
+        "FlipbookSizeY": [
+            564,
+            "int"
+        ],
+        "FlipbookStartRandom": [
+            618,
+            "byte"
+        ],
+        "LifetimeMax": [
+            504,
+            "float"
+        ],
+        "LifetimeMin": [
+            500,
+            "float"
+        ],
+        "LightEmission": [
+            568,
+            "float"
+        ],
+        "LightInfluence": [
+            572,
+            "float"
+        ],
+        "Orientation": [
+            580,
+            "int"
+        ],
+        "Rate": [
+            584,
+            "float"
+        ],
+        "RotationMax": [
+            520,
+            "float"
+        ],
+        "RotationMin": [
+            516,
+            "float"
+        ],
+        "RotSpeedMax": [
+            512,
+            "float"
+        ],
+        "RotSpeedMin": [
+            508,
+            "float"
+        ],
+        "Shape": [
+            588,
+            "int"
+        ],
+        "ShapeInOut": [
+            592,
+            "int"
+        ],
+        "ShapeStyle": [
+            600,
+            "int"
+        ],
+        "Size": [
+            200,
+            "float",
+            "NumberSequence"
+        ],
+        "SizeArray": [
+            184,
+            "pointer"
+        ],
+        "SizeCount": [
+            192,
+            "int"
+        ],
+        "SpeedMax": [
+            528,
+            "float"
+        ],
+        "SpeedMin": [
+            524,
+            "float"
+        ],
+        "SpreadAngleMax": [
+            536,
+            "float"
+        ],
+        "SpreadAngleMin": [
+            532,
+            "float"
+        ],
+        "SquashArray": [
+            248,
+            "pointer"
+        ],
+        "SquashCount": [
+            256,
+            "int"
+        ],
+        "Texture": [
+            448,
+            "string"
+        ],
+        "Transparency": [
+            328,
+            "float",
+            "NumberSequence"
+        ],
+        "TransparencyArray": [
+            312,
+            "pointer"
+        ],
+        "TransparencyCount": [
+            320,
+            "int"
+        ],
+        "ZOffset": [
+            612,
+            "float"
+        ]
+    },
+    "PartOperation": {
+        "UsePartColor": [
+            817,
+            "byte"
+        ]
+    },
+    "Player": {
+        "AccountAge": [
+            184,
+            "int"
+        ],
+        "Character": [
+            664,
+            "pointer"
+        ]
+    },
+    "PointLight": {
+        "Brightness": [
+            204,
+            "float"
+        ],
+        "Color": [
+            188,
+            "float",
+            "Color3"
+        ],
+        "Range": [
+            216,
+            "float"
+        ]
+    },
+    "ProximityPrompt": {
+        "Enabled": [
+            310,
+            "byte"
+        ],
+        "HoldDuration": [
+            288,
+            "float"
+        ],
+        "KeyboardKeyCode": [
+            292,
+            "int"
+        ],
+        "MaxActivationDistance": [
+            296,
+            "float"
+        ],
+        "MaxIndicatorDistance": [
+            300,
+            "float"
+        ],
+        "ObjectText": [
+            208,
+            "string"
+        ],
+        "RequiresLineOfSight": [
+            311,
+            "byte"
+        ]
+    },
+    "ScreenGui": {
+        "DisplayOrder": [
+            200,
+            "int"
+        ],
+        "Enabled": [
+            1220,
+            "byte"
+        ]
+    },
+    "Shirt": {
+        "Color3": [
+            288,
+            "float",
+            "Color3"
+        ],
+        "Template": [
+            256,
+            "string"
+        ]
+    },
+    "Sky": {
+        "MoonAngularSize": [
+            580,
+            "float"
+        ],
+        "MoonTextureId": [
+            200,
+            "string"
+        ],
+        "SkyboxBk": [
+            248,
+            "string"
+        ],
+        "SkyboxDn": [
+            296,
+            "string"
+        ],
+        "SkyboxFt": [
+            344,
+            "string"
+        ],
+        "SkyboxLf": [
+            392,
+            "string"
+        ],
+        "SkyboxRt": [
+            440,
+            "string"
+        ],
+        "SkyboxUp": [
+            488,
+            "string"
+        ],
+        "StarCount": [
+            584,
+            "int"
+        ],
+        "SunAngularSize": [
+            588,
+            "float"
+        ],
+        "SunTextureId": [
+            536,
+            "string"
+        ]
+    },
+    "Sound": {
+        "PlaybackSpeed": [
+            284,
+            "float"
+        ],
+        "RollOffMaxDistance": [
+            288,
+            "float"
+        ],
+        "RollOffMinDistance": [
+            292,
+            "float"
+        ],
+        "SoundGroup": [
+            232,
+            "pointer"
+        ],
+        "SoundId": [
+            200,
+            "string"
+        ],
+        "Volume": [
+            304,
+            "float"
+        ]
+    },
+    "SoundGroup": {
+        "Volume": [
+            184,
+            "float"
+        ]
+    },
+    "SoundService": {
+        "AmbientReverb": [
+            336,
+            "int"
+        ],
+        "DistanceFactor": [
+            356,
+            "float"
+        ],
+        "DopplerScale": [
+            360,
+            "float"
+        ],
+        "RolloffScale": [
+            368,
+            "float"
+        ]
+    },
+    "SpecialMesh": {
+        "MeshId": [
+            248,
+            "string"
+        ],
+        "Offset": [
+            184,
+            "float",
+            "Vector3"
+        ],
+        "Scale": [
+            196,
+            "float",
+            "Vector3"
+        ],
+        "TextureId": [
+            296,
+            "string"
+        ],
+        "VertexColor": [
+            208,
+            "float",
+            "Vector3"
+        ]
+    },
+    "SpotLight": {
+        "Angle": [
+            216,
+            "float"
+        ],
+        "Brightness": [
+            204,
+            "float"
+        ],
+        "Color": [
+            188,
+            "float",
+            "Color3"
+        ],
+        "Range": [
+            224,
+            "float"
+        ]
+    },
+    "StringValue": {
+        "Value": [
+            184,
+            "string"
+        ]
+    },
+    "SurfaceAppearance": {
+        "Color": [
+            624,
+            "float",
+            "Color3"
+        ],
+        "ColorMap": [
+            200,
+            "string"
+        ],
+        "EmissiveMask": [
+            248,
+            "string"
+        ],
+        "MetalnessMap": [
+            296,
+            "string"
+        ],
+        "NormalMap": [
+            344,
+            "string"
+        ],
+        "RoughnessMap": [
+            392,
+            "string"
+        ]
+    },
+    "SurfaceLight": {
+        "Angle": [
+            216,
+            "float"
+        ],
+        "Brightness": [
+            204,
+            "float"
+        ],
+        "Color": [
+            188,
+            "float",
+            "Color3"
+        ],
+        "Range": [
+            224,
+            "float"
+        ]
+    },
+    "Team": {
+        "BrickColor": [
+            184,
+            "int"
+        ]
+    },
+    "TextBox": {
+        "PlaceholderText": [
+            3576,
+            "string"
+        ],
+        "Text": [
+            2888,
+            "string"
+        ]
+    },
+    "TextButton": {
+        "Text": [
+            3536,
+            "string"
+        ]
+    },
+    "TextLabel": {
+        "Text": [
+            2896,
+            "string"
+        ]
+    },
+    "Texture": {
+        "Color3": [
+            488,
+            "float",
+            "Color3"
+        ],
+        "ColorMapContent": [
+            384,
+            "string"
+        ],
+        "Face": [
+            208,
+            "int"
+        ],
+        "LocalTransparencyModifier": [
+            516,
+            "float"
+        ],
+        "OffsetStudsU": [
+            624,
+            "float"
+        ],
+        "OffsetStudsV": [
+            628,
+            "float"
+        ],
+        "StudsPerTileU": [
+            616,
+            "float"
+        ],
+        "StudsPerTileV": [
+            620,
+            "float"
+        ],
+        "Transparency": [
+            532,
+            "float"
+        ]
+    },
+    "Tool": {
+        "Grip": [
+            1160,
+            "float",
+            "CFrame"
+        ],
+        "GripPosition": [
+            1196,
+            "float",
+            "Vector3"
+        ],
+        "PrimaryPart": [
+            600,
+            "pointer"
+        ]
+    },
+    "UIGradient": {
+        "ColorArray": [
+            264,
+            "pointer"
+        ],
+        "ColorCount": [
+            272,
+            "int"
+        ],
+        "Enabled": [
+            344,
+            "byte"
+        ],
+        "Offset": [
+            320,
+            "float",
+            "Vector2"
+        ],
+        "Rotation": [
+            328,
+            "float"
+        ],
+        "TransparencyArray": [
+            200,
+            "pointer"
+        ],
+        "TransparencyCount": [
+            208,
+            "int"
+        ]
+    },
+    "Vector3Value": {
+        "Value": [
+            184,
+            "float",
+            "Vector3"
+        ]
+    },
+    "version": "version-90f2fddd3b244ff6",
+    "Weld": {
+        "C0": [
+            56,
+            "float",
+            "CFrame"
+        ],
+        "C1": [
+            104,
+            "float",
+            "CFrame"
+        ],
+        "Part0": [
+            280,
+            "pointer"
+        ],
+        "Part1": [
+            296,
+            "pointer"
+        ],
+        "Primitive1": [
+            8,
+            "pointer"
+        ],
+        "Primitive2": [
+            264,
+            "pointer"
+        ]
+    }
+}
