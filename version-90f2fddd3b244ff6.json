@@ -395,6 +395,8 @@
             "Vector3"
         ]
     },
+    "CanvasGroup": [
+    ],
     "CharacterMesh": {
         "BaseTextureContent": [
             200,
@@ -1103,6 +1105,10 @@
         ]
     },
     "ProximityPrompt": {
+        "ActionText": [
+            176,
+            "string"
+        ],
         "Enabled": [
             310,
             "byte"
