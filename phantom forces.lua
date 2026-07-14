@@ -52,6 +52,9 @@ if rbxcli and not memory.is_enabled() then
     error('Memory API must be enabled for this script.')
 end
 
+-- require('games/havoc/cache')
+-- require('games/havoc/render')
+
 -- require('games/deepwoken/cache')
 -- require('games/deepwoken/render')
 -- require('games/deepwoken/autoparry rw')
@@ -59,14 +62,10 @@ end
 require("games/phantom forces/cache")
 require("games/phantom forces/render")
 
--- require('games/vv ultimatum/cache')
--- require('games/vv ultimatum/render')
-
--- require('projects/instance saver')
 -- require('projects/offset dumper')
 end)
 __bundle_register("games/phantom forces/render", function(require, _LOADED, __bundle_register, __bundle_modules)
-local cache, memory, compatibility = require("games/phantom forces/cache"), require("libraries/memory"), require("libraries/compatibility")
+local cache, memory, compatibility = require("games/phantom forces/cache"), require("modules/memory"), require("modules/compatibility")
 local library, flags = cache.library, cache.library.flags
 
 local fps, fps_count, fps_tick = 0, 0, compatibility.tick()
@@ -360,33 +359,49 @@ compatibility.render_connection(function()
     end
 end)
 end)
-__bundle_register("libraries/compatibility", function(require, _LOADED, __bundle_register, __bundle_modules)
-local globals = {}
+__bundle_register("modules/compatibility", function(require, _LOADED, __bundle_register, __bundle_modules)
+local compatibility = {}
 
 local builtin_font = font
-local font, crypt = require("libraries/font"), require("libraries/crypt")
+local font, crypt = require("modules/font"), require("modules/crypt")
 
 if cheat then
-    globals.context = 'Serotonin'
-    globals.rbx_version = package.cpath:match('version%-[%w]+')
+    compatibility.context = 'Serotonin'
+    compatibility.rbx_version = package.cpath:match('version%-[%w]+')
+
+    if not compatibility.rbx_version then
+        compatibility.no_version = true
+        compatibility.rbx_version = 'version-90f2fddd3b244ff6'
+    end
 
     --? game functions
-    globals.tick = utility.get_tick_count
+    compatibility.tick = utility.get_tick_count
 
-    globals.get_camera_pos = function(c)
+    compatibility.get_camera_pos = function(c)
         return game.CameraPosition
     end
 
-    globals.get_children = game.Workspace.GetChildren
-    globals.get_descendants = game.Workspace.GetDescendants
-    globals.find_first_child = game.Workspace.FindFirstChild
-    globals.find_first_child_of_class = game.Workspace.FindFirstChildOfClass
+    local ws = game.Workspace
+    compatibility.get_children = ws.GetChildren
+    compatibility.get_descendants = ws.GetDescendants
+    compatibility.find_first_child = ws.FindFirstChild
+    compatibility.find_first_child_of_class = ws.FindFirstChildOfClass
 
-    globals.get_datamodel = function() return game.Datamodel end
-    globals.get_local_player = function() return game.LocalPlayer end
+    compatibility.get_datamodel = function() return game.Datamodel end
+    compatibility.get_local_player = function() return game.LocalPlayer end
+
+    compatibility.get_attributes = function(i)
+        local f = {}
+
+        for _, att in pairs(i:GetAttributes()) do
+            f[att.Name] = att.Value
+        end
+
+        return f
+    end
 
     --? file functions
-    globals.list_files = function(path)
+    compatibility.list_files = function(path)
         local d = {}
         for i, f in pairs(file.listdir(path)) do
             d[i] = f.name
@@ -394,37 +409,37 @@ if cheat then
         return d
     end
 
-    globals.read_file = file.read
-    globals.write_file = file.write
-    globals.delete_file = file.delete
+    compatibility.read_file = file.read
+    compatibility.write_file = file.write
+    compatibility.delete_file = file.delete
 
     --? ipnut functions
-    globals.key_press = keyboard.press
-    globals.key_release = keyboard.release
-    globals.mouse_press = mouse.press
-    globals.mouse_release = mouse.release
-    globals.mouse_scroll = mouse.scroll
-    globals.is_key_pressed = keyboard.is_pressed
-    globals.get_mouse_location = utility.get_mouse_pos
-    globals.move_mouse_relative = utility.move_mouse
+    compatibility.key_press = keyboard.press
+    compatibility.key_release = keyboard.release
+    compatibility.mouse_press = mouse.press
+    compatibility.mouse_release = mouse.release
+    compatibility.mouse_scroll = mouse.scroll
+    compatibility.is_key_pressed = keyboard.is_pressed
+    compatibility.get_mouse_location = utility.get_mouse_pos
+    compatibility.move_mouse_relative = utility.move_mouse
 
     --? connect functions
-    globals.slow_connection = function(callback)
+    compatibility.slow_connection = function(callback)
         cheat.register('onSlowUpdate', callback)
     end
 
-    globals.update_connection = function(callback)
+    compatibility.update_connection = function(callback)
         cheat.register('onUpdate', callback)
     end
 
-    globals.render_connection = function(callback)
+    compatibility.render_connection = function(callback)
         cheat.register('onPaint', callback)
     end
 
     --? drawing functions
     local ddt, fdt, dgt, fgt = draw.text_outlined, font.draw_text, draw.get_text_size, font.get_text_size
 
-    globals.draw_text = function(text, x, y, color, font_name, alpha)
+    compatibility.draw_text = function(text, x, y, color, font_name, alpha)
         if font_name == 'SmallestPixel' then
             ddt(text, x, y, color, font_name, alpha)
         else
@@ -432,7 +447,7 @@ if cheat then
         end
     end
 
-    globals.get_text_size = function(text, font_name)
+    compatibility.get_text_size = function(text, font_name)
         if font_name == 'SmallestPixel' then
             return dgt(text, font_name)
         else
@@ -440,21 +455,47 @@ if cheat then
         end
     end
 
-    globals.queued_get_text_size = globals.get_text_size
+    compatibility.queued_get_text_size = compatibility.get_text_size
 
-    globals.world_to_screen = utility.world_to_screen
+    local wts = utility.world_to_screen
+    compatibility.world_to_screen = wts
 
-    globals.load_image = utility.load_image
-    globals.draw_circle = draw.circle
-    globals.draw_circle_filled = draw.circle_filled
-    globals.draw_line = draw.line
-    globals.draw_rect = draw.rect
-    globals.draw_rect_filled = draw.rect_filled
-    globals.draw_gradient = draw.gradient
-    globals.draw_image = draw.image
-    globals.draw_polyline = draw.polyline
-    globals.draw_convex_poly = draw.convex_poly_filled
-    globals.draw_compute_convex = draw.compute_convex_hull
+    compatibility.mass_project = function(points)
+        local n = {}
+        for _, p in pairs(points) do
+            local x, y, os = wts(p)
+            if os then
+                n[#n+1] = {x, y}
+            end
+        end
+
+        return n
+    end
+
+    compatibility.load_image = utility.load_image
+    compatibility.draw_circle = draw.circle
+    compatibility.draw_circle_filled = draw.circle_filled
+    compatibility.draw_line = draw.line
+    compatibility.draw_rect = draw.rect
+    compatibility.draw_rect_filled = draw.rect_filled
+    compatibility.draw_gradient = draw.gradient
+    compatibility.draw_image = draw.image
+    compatibility.draw_polyline = draw.polyline
+    compatibility.draw_convex_poly = draw.convex_poly_filled
+    compatibility.draw_compute_convex = draw.compute_convex_hull
+
+    local mp, dcc, dcp, dpl = compatibility.mass_project, compatibility.draw_compute_convex, compatibility.draw_convex_poly, compatibility.draw_polyline
+    compatibility.highlight_from_corners = function(corners, out_color, out_alpha, in_color, in_alpha)
+        local projected = mp(corners)
+
+        if #projected >= 2 then
+            local convex = dcc(projected)
+            if convex and #convex >= 2 then
+                dcp(convex, in_color, in_alpha)
+                dpl(convex, out_color, true, 1, out_alpha)
+            end
+        end
+    end
 
     --? memory functions
     local r, w = memory.read, memory.write
@@ -466,70 +507,80 @@ if cheat then
     }
 
     for _, t in pairs(types) do
-        globals['read_' .. t] = function(a)
+        compatibility['read_' .. t] = function(a)
             return r(t, a)
         end
 
-        globals['write_' .. t] = function(a, v)
+        compatibility['write_' .. t] = function(a, v)
             w(t, a, v)
         end
     end
 
     local gss = draw.get_screen_size
-    globals.get_screen_size = function()
+    compatibility.get_screen_size = function()
         return gss()
     end
 
-    globals.get_entity_list = entity.get_players
-    globals.get_entity_target = entity.get_target
+    compatibility.get_entity_list = entity.get_players
+    compatibility.get_entity_target = entity.get_target
 
-    globals.get_menu_state = utility.get_menu_state
+    compatibility.get_menu_state = utility.get_menu_state
 
-    globals.get_clipboard = utility.get_clipboard
-    globals.set_clipboard = utility.set_clipboard
+    compatibility.get_clipboard = utility.get_clipboard
+    compatibility.set_clipboard = utility.set_clipboard
 elseif rbxcli then
     local v2, c4 = Vector2.new, Color4.fromRGBA
 
-    globals.context = 'RbxCli'
-    globals.rbx_version = rbxcli.get_product_information().built_for_roblox_version
+    compatibility.context = 'RbxCli'
+    compatibility.rbx_version = rbxcli.get_product_information().built_for_roblox_version
 
     --? game functions
     local clock = os.clock
-    globals.tick = function()
+    compatibility.tick = function()
         return clock() * 1000
     end
 
-    globals.get_camera_pos = function(c)
+    compatibility.get_camera_pos = function(c)
         return c and c.Position or Vector3.new(0, 0, 0)
     end
 
     local ws = game.Workspace
-    globals.get_children = ws.GetChildren
-    globals.get_descendants = ws.GetDescendants
-    globals.find_first_child = ws.FindFirstChild
-    globals.find_first_child_of_class = ws.FindFirstChildOfClass
+    compatibility.get_children = ws.GetChildren
+    compatibility.get_descendants = ws.GetDescendants
+    compatibility.find_first_child = ws.FindFirstChild
+    compatibility.find_first_child_of_class = ws.FindFirstChildOfClass
 
-    globals.get_datamodel = function() return game end
-    globals.get_local_player = function()
+    compatibility.get_datamodel = function() return game end
+    compatibility.get_local_player = function()
         local players = game:GetService('Players')
         if players then
             return players.LocalPlayer
         end
     end
 
-    --? file functions
-    globals.list_files = fs.list_files
+    compatibility.get_attributes = ws.GetAttributes
 
-    globals.read_file = function(path)
+    --? file functions
+    local list_files = fs.list_files
+    compatibility.list_files = function(path)
+        local files = {}
+        for i, v in pairs(list_files(path)) do
+            files[i] = v:match("([^\\]+)$")
+        end
+
+        return files
+    end
+
+    compatibility.read_file = function(path)
         if fs.is_file(path) then
             local content = fs.read_async(path)
             if content then
-                return content
+                return buffer.tostring(content)
             end
         end
     end
 
-    globals.write_file = function(path, content)
+    compatibility.write_file = function(path, content)
         if type(content) ~= 'buffer' then
             content = buffer.fromstring(content)
         end
@@ -542,25 +593,25 @@ elseif rbxcli then
         end
     end
 
-    globals.delete_file = function(path) end
+    compatibility.delete_file = function(path) end
 
     --? input functions
     local uis = game:GetService('UserInputService')
     local ikd = uis.IsKeyDown
     local imd = uis.IsMouseButtonPressed
 
-    globals.mouse_scroll = input.mouse_scroll
-    globals.move_mouse_relative = function(x, y)
+    compatibility.mouse_scroll = input.mouse_scroll
+    compatibility.move_mouse_relative = function(x, y)
         return input.mouse_move_relative(x, y)
     end
 
-    globals.key_press = input.key_down
-    globals.key_release = input.key_up
+    compatibility.key_press = input.key_down
+    compatibility.key_release = input.key_up
 
-    globals.mouse_press = input.mouse_down
-    globals.mouse_release = input.mouse_up
+    compatibility.mouse_press = input.mouse_down
+    compatibility.mouse_release = input.mouse_up
 
-    globals.is_key_pressed = function(keycode)
+    compatibility.is_key_pressed = function(keycode)
         if keycode <= 4 then
             local v = imd(uis, keycode)
             return v
@@ -570,32 +621,32 @@ elseif rbxcli then
         end
     end
 
-    globals.get_mouse_location = function()
+    compatibility.get_mouse_location = function()
         local v = uis:GetMouseLocation()
         if v then return {v.X, v.Y} end
         return {0, 0}
     end
 
     --? connect functions
-    globals.slow_connection = function(callback)
+    compatibility.slow_connection = function(callback)
         task.spawn(function()
             while true do
-                callback()
+                task.spawn(callback)
                 task.wait(1)
             end
         end)
     end
 
-    globals.update_connection = function(callback)
+    compatibility.update_connection = function(callback)
         task.spawn(function()
             while true do
-                callback()
+                task.spawn(callback)
                 task.wait(0.015)
             end
         end)
     end
 
-    globals.render_connection = function(callback)
+    compatibility.render_connection = function(callback)
         local run_service = game:GetService('RunService')
         return run_service.PreRender:Connect(callback)
     end
@@ -620,17 +671,32 @@ elseif rbxcli then
 
     builtin_font.request_font_reload()
 
+    local mpj = rendering.mass_project
+    compatibility.mass_project = function(points)
+        local r = mpj(points)
+
+        local n = {}
+        for _, p in pairs(r) do
+            if p[2] then
+                local v = p[1]
+                n[#n+1] = {v.X, v.Y}
+            end
+        end
+
+        return n
+    end
+
     local wts = rendering.world_to_screen
-    globals.world_to_screen = function(vector3)
+    compatibility.world_to_screen = function(vector3)
         local pos, os = wts(vector3)
         return pos.X, pos.Y, os
     end
 
     local dt = immediate.text
-    globals.draw_text = function(text, x, y, color, font_name, alpha)
+    compatibility.draw_text = function(text, x, y, color, font_name, alpha)
         local descriptor = descriptors[font_name]
         if descriptor then
-            dt(v2(x, y - 4), text, descriptor[1], descriptor[2], c4(color.R, color.G, color.B, alpha))
+            dt(v2(x, y), text, descriptor[1], descriptor[2], c4(color.R, color.G, color.B, alpha))
         end
     end
 
@@ -649,7 +715,7 @@ elseif rbxcli then
         end
     end)
 
-    globals.queued_get_text_size = function(text, font_name)
+    compatibility.queued_get_text_size = function(text, font_name)
         if not descriptors[font_name] then return 0, 0 end
 
         local i = #text_size_queue + 1
@@ -671,7 +737,7 @@ elseif rbxcli then
         return x, y
     end
 
-    globals.get_text_size = function(text, font_name)
+    compatibility.get_text_size = function(text, font_name)
         local descriptor = descriptors[font_name]
         if descriptor then
             local cs = calculate_text_size(text, descriptor[1])
@@ -684,23 +750,23 @@ elseif rbxcli then
     end
 
     local dc = immediate.circle
-    globals.draw_circle = function(x, y, radius, color, thickness, segments, alpha)
+    compatibility.draw_circle = function(x, y, radius, color, thickness, segments, alpha)
         alpha = alpha or 255
         dc(v2(x, y), radius, false, false, c4(color.R, color.G, color.B, alpha))
     end
 
-    globals.draw_circle_filled = function(x, y, radius, color, segments, alpha)
+    compatibility.draw_circle_filled = function(x, y, radius, color, segments, alpha)
         alpha = alpha or 255
         dc(v2(x, y), radius, true, false, c4(color.R, color.G, color.B, alpha))
     end
 
     local dl = immediate.line
-    globals.draw_line = function(sx, sy, ex, ey, color, thickness, alpha)
+    compatibility.draw_line = function(sx, sy, ex, ey, color, thickness, alpha)
         alpha = alpha or 255
         dl(v2(sx, sy), v2(ex, ey), thickness, false, c4(color.R, color.G, color.B, alpha))
     end
 
-    globals.load_image = function(content)
+    compatibility.load_image = function(content)
         if type(content) ~= 'buffer' then
             content = buffer.fromstring(content)
         end
@@ -709,19 +775,18 @@ elseif rbxcli then
     end
 
     local di = immediate.image
-    globals.draw_image = function(image, x, y, w, h, color, alpha)
+    compatibility.draw_image = function(image, x, y, w, h, color, alpha)
         alpha = alpha or 255
         di(image, v2(x, y), v2(x + w, y + h), c4(color.R, color.G, color.B, alpha))
     end
 
     local dr = immediate.rectangle
-    globals.draw_rect = function(x, y, w, h, color, thickness, rounding, alpha)
-        alpha = alpha or 255
-        dr(v2(x, y), v2(x + w, y + h), rounding, false, false, c4(color.R, color.G, color.B, alpha))
+    compatibility.draw_rect = function(x, y, w, h, color, thickness, rounding, alpha)
+        dr(v2(x, y), v2(x + w, y + h), rounding, false, thickness > 2 and true or false, c4(color.R, color.G, color.B, alpha))
     end
 
-    local rect_image = globals.load_image(crypt.base64.decode('iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuMTGKCBbOAAAAuGVYSWZJSSoACAAAAAUAGgEFAAEAAABKAAAAGwEFAAEAAABSAAAAKAEDAAEAAAACAAAAMQECABEAAABaAAAAaYcEAAEAAABsAAAAAAAAAGAAAAABAAAAYAAAAAEAAABQYWludC5ORVQgNS4xLjExAAADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlgAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAAAGNdRzso9yOwAAABNJREFUGFdj/P//PwMMMMFZeDkAlm4DBW8luGcAAAAASUVORK5CYII='))
-    globals.draw_rect_filled = function(x, y, w, h, color, rounding, alpha)
+    local rect_image = compatibility.load_image(crypt.base64.decode('iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuMTGKCBbOAAAAuGVYSWZJSSoACAAAAAUAGgEFAAEAAABKAAAAGwEFAAEAAABSAAAAKAEDAAEAAAACAAAAMQECABEAAABaAAAAaYcEAAEAAABsAAAAAAAAAGAAAAABAAAAYAAAAAEAAABQYWludC5ORVQgNS4xLjExAAADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlgAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAAAGNdRzso9yOwAAABNJREFUGFdj/P//PwMMMMFZeDkAlm4DBW8luGcAAAAASUVORK5CYII='))
+    compatibility.draw_rect_filled = function(x, y, w, h, color, rounding, alpha)
         alpha = alpha or 255
         di(rect_image, v2(x, y), v2(x + w, y + h), c4(color.R, color.G, color.B, alpha), rounding)
 
@@ -732,7 +797,7 @@ elseif rbxcli then
         return a + (b - a) * t
     end
 
-    globals.draw_gradient = function(x, y, w, h, start_color, end_color, horizontal, start_alpha, end_alpha)
+    compatibility.draw_gradient = function(x, y, w, h, start_color, end_color, horizontal, start_alpha, end_alpha)
         start_alpha = start_alpha or 255
         end_alpha = end_alpha or 255
 
@@ -760,7 +825,7 @@ elseif rbxcli then
         end
     end
 
-    globals.draw_polyline = function(points, color, closed, thickness, alpha)
+    compatibility.draw_polyline = function(points, color, closed, thickness, alpha)
         alpha = alpha or 255
         thickness = thickness or 1
 
@@ -792,12 +857,12 @@ elseif rbxcli then
     end
 
     local cpf = immediate.convex_poly_filled
-    globals.draw_convex_poly = function(points, color, alpha)
+    compatibility.draw_convex_poly = function(points, color, alpha)
         cpf(points, c4(color.R, color.G, color.B, alpha))
     end
 
     local ch2d = rendering.convex_hull_2d
-    globals.draw_compute_convex = function(points)
+    compatibility.draw_compute_convex = function(points)
         local conv = {}
         if points[1] and type(points[1]) == 'table' then
             for i, p in pairs(points) do
@@ -808,6 +873,19 @@ elseif rbxcli then
         end
 
         return ch2d(conv)
+    end
+
+    local mp, dcc, dcp, dpl = compatibility.mass_project, compatibility.draw_compute_convex, compatibility.draw_convex_poly, compatibility.draw_polyline
+    compatibility.highlight_from_corners = function(corners, out_color, out_alpha, in_color, in_alpha)
+        local projected = mp(corners)
+
+        if #projected >= 2 then
+            local convex = dcc(projected)
+            if convex and #convex >= 2 then
+                dcp(convex, in_color, in_alpha)
+                dpl(convex, out_color, true, 1, out_alpha)
+            end
+        end
     end
 
     --? memory functions
@@ -834,11 +912,11 @@ elseif rbxcli then
         --? can't write strings
         string = {function(a)
             return rs(a, true, 128, false)
-        end, function() end, ''}
+        end, memory.write_string, ''}
     }
 
     for i, v in pairs(types) do
-        globals['read_' .. i] = function(a)
+        compatibility['read_' .. i] = function(a)
             local rd, rv = v[1](a)
             if rd and rv then
                 return rv
@@ -847,12 +925,12 @@ elseif rbxcli then
             end
         end
 
-        globals['write_' .. i] = v[2]
+        compatibility['write_' .. i] = v[2]
     end
 
-    globals.get_screen_size = function(c)
+    compatibility.get_screen_size = function(c)
         if not c then
-            c = globals.get_datamodel():GetService('Workspace'):FindFirstChildOfClass('Camera')
+            c = compatibility.get_datamodel():GetService('Workspace'):FindFirstChildOfClass('Camera')
         end
 
         if c then
@@ -861,23 +939,23 @@ elseif rbxcli then
         end
     end
 
-    globals.get_entity_list = function(only_enemies)
+    compatibility.get_entity_list = function(only_enemies)
         return {}
     end
 
-    globals.get_entity_target = function() end
+    compatibility.get_entity_target = function() end
 
     local window_focused = input.is_window_focused
-    globals.get_rbx_state = function() return window_focused() end
-    globals.get_menu_state = function() return not window_focused() end
+    compatibility.get_rbx_state = function() return window_focused() end
+    compatibility.get_menu_state = function() return not window_focused() end
 
-    globals.get_clipboard = function() return 'nil' end
-    globals.set_clipboard = function(s) end
+    compatibility.get_clipboard = function() return 'nil' end
+    compatibility.set_clipboard = function(s) end
 end
 
-return globals
+return compatibility
 end)
-__bundle_register("libraries/crypt", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("modules/crypt", function(require, _LOADED, __bundle_register, __bundle_modules)
 local crypt = {}
 
 crypt.json = {}; do
@@ -1301,9 +1379,9 @@ end
 
 return crypt
 end)
-__bundle_register("libraries/font", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("modules/font", function(require, _LOADED, __bundle_register, __bundle_modules)
 local font = {}
-local crypt = require("libraries/crypt")
+local crypt = require("modules/crypt")
 
 local custom = false
 local draw_image, load_image = function() end, function() end
@@ -4282,12 +4360,38 @@ end
 
 return font
 end)
-__bundle_register("libraries/memory", function(require, _LOADED, __bundle_register, __bundle_modules)
+__bundle_register("modules/memory", function(require, _LOADED, __bundle_register, __bundle_modules)
 local module = {}
 
-local crypt, library, compatibility = require("libraries/crypt"), require("libraries/paragon"), require("libraries/compatibility")
+local crypt, library, compatibility = require("modules/crypt"), require("modules/paragon"), require("modules/compatibility")
 
 local version = compatibility.rbx_version
+
+if compatibility.no_version then
+    http.get('https://clientsettingscdn.roblox.com/v2/client-version/WindowsPlayer', {}, function(response)
+        if response then
+            version = crypt.json.decode(response).clientVersionUpload
+
+            local offsets_file = compatibility.read_file(version .. '.json')
+            if offsets_file then
+                if type(offsets_file) == 'buffer' then
+                    offsets_file = buffer.tostring(offsets_file)
+                end
+
+                module.offsets = crypt.json.decode(offsets_file)
+            else
+                library:notify({
+                    type = 'error',
+                    title = 'Missing Offsets File',
+                    description = 'The link has been copied to your clipboard. If the page exists, download the file and place in serotonin/files. Otherwise, please wait for an update.',
+                    duration = 5
+                })
+                compatibility.set_clipboard('https://github.com/minions638/serotonin/blob/main/' .. version .. '.json')
+            end
+        end
+    end)
+end
+
 local offsets_file = compatibility.read_file(version .. '.json')
 if offsets_file then
     if type(offsets_file) == 'buffer' then
@@ -4329,7 +4433,7 @@ else
             type = 'error',
             title = 'Missing Offsets File',
             description = 'The link has been copied to your clipboard. If the page exists, download the file and place in serotonin/files. Otherwise, please wait for an update.',
-            duration = 999999
+            duration = 5
         })
         compatibility.set_clipboard('https://github.com/minions638/serotonin/blob/main/' .. version .. '.json')
     end
@@ -4338,9 +4442,9 @@ end
 local read_float, read_double, read_int, read_uint, read_short, read_ushort, read_byte, read_bool, read_int64, read_uint64, read_pointer, read_string = compatibility.read_float, compatibility.read_double, compatibility.read_int, compatibility.read_uint, compatibility.read_short, compatibility.read_ushort, compatibility.read_byte, compatibility.read_bool, compatibility.read_int64, compatibility.read_uint64, compatibility.read_pointer, compatibility.read_string
 local write_float, write_double, write_int, write_uint, write_short, write_ushort, write_byte, write_bool, write_int64, write_uint64, write_pointer, write_string = compatibility.write_float, compatibility.write_double, compatibility.write_int, compatibility.write_uint, compatibility.write_short, compatibility.write_ushort, compatibility.write_byte, compatibility.write_bool, compatibility.write_int64, compatibility.write_uint64, compatibility.write_pointer, compatibility.write_string
 
-local color3, color3_rgb, vector3, offsets = Color3.new, Color3.fromRGB, Vector3.new, module.offsets
+local color3, color3_rgb, vector3 = Color3.new, Color3.fromRGB, Vector3.new
 module.read = function(address, class, property)
-    local class_data = offsets[class] and offsets[class][property]
+    local class_data = module.offsets[class] and module.offsets[class][property]
     if class_data then
         local offset = class_data[1]
         local memory_type = class_data[2]
@@ -4373,7 +4477,7 @@ module.read = function(address, class, property)
 end
 
 module.write = function(address, class, property, value)
-    local class_data = offsets[class] and offsets[class][property]
+    local class_data = module.offsets[class] and module.offsets[class][property]
     if class_data then
         local offset = class_data[1]
         local memory_type = class_data[2]
@@ -4404,12 +4508,54 @@ module.write = function(address, class, property, value)
     end
 end
 
-module.get_attachment_position = function(attachment)
-    local parent = attachment.Parent
-    if parent:IsA('Part') or parent:IsA('MeshPart') then
+module.write_vector3 = function(base, x, y, z)
+    write_float(base, x)
+    write_float(base + 4, y)
+    write_float(base + 8, z)
+end
+
+module.get_attachment_position = function(attachment, parent)
+    if parent then
         local parentpos = parent.Position
-        local transform = module.read(attachment.Address, 'Attachment', 'Transform')
+        local transform = module.read(attachment.Address, 'Attachment', 'TransformPosition')
         return parentpos + transform
+    else
+        local transform = module.read(attachment.Address, 'Attachment', 'TransformPosition')
+        return transform
+    end
+end
+
+module.get_attachment_transform = function(attachment, only_look)
+    local base = attachment.Address + module.offsets.Attachment.Transform[1]
+
+    if only_look then
+        local r02 = read_float(base + 8)
+        local r12 = read_float(base + 20)
+        local r22 = read_float(base + 32)
+        return vector3(-r02, -r12, -r22)
+    else
+        local r00 = read_float(base)
+        local r01 = read_float(base + 4)
+        local r02 = read_float(base + 8)
+
+        local r10 = read_float(base + 12)
+        local r11 = read_float(base + 16)
+        local r12 = read_float(base + 20)
+
+        local r20 = read_float(base + 24)
+        local r21 = read_float(base + 28)
+        local r22 = read_float(base + 32)
+
+        local x = read_float(base + 36)
+        local y = read_float(base + 40)
+        local z = read_float(base + 44)
+
+        return {
+            Position = vector3(x, y, z),
+            LookVector = vector3(-r02, -r12, -r22),
+            RightVector = vector3(r00, r10, r20),
+            UpVector = vector3(r01, r11, r21)
+        }
     end
 end
 
@@ -4510,7 +4656,7 @@ end
 
 module.get_camera_cframe = function(camera)
     local address = camera.Address
-    local cframe = offsets['Camera']['CFrame'][1]
+    local cframe = module.offsets['Camera']['CFrame'][1]
 
     local base = address + cframe
 
@@ -4578,15 +4724,15 @@ module.get_transformed_bone = function(bone)
         end
 
         if class ~= 'Bone' then
-            local prim = read_pointer(obj.Address + offsets['BasePart']['Primitive'][1])
-            return module.get_components(prim, offsets['BasePart']['CFrame'][1])
+            local prim = read_pointer(obj.Address + module.offsets['BasePart']['Primitive'][1])
+            return module.get_components(prim, module.offsets['BasePart']['CFrame'][1])
         end
 
         local parent_cframe = get_cframe(obj.Parent)
         if not parent_cframe then return nil end
 
-        local bone_cframe = module.get_bone_cframe(obj.Address, offsets['Bone']['CFrame'][1])
-        local bone_transform = module.get_components(obj.Address, offsets['Bone']['Transform'][1])
+        local bone_cframe = module.get_bone_cframe(obj.Address, module.offsets['Bone']['CFrame'][1])
+        local bone_transform = module.get_components(obj.Address, module.offsets['Bone']['Transform'][1])
 
         local bone_world_transformed = module.transform_cframe(parent_cframe, bone_cframe)
         return module.transform_cframe(bone_world_transformed, bone_transform)
@@ -4659,17 +4805,19 @@ end
 
 module.get_corners = function(cframe, size)
     local pos, look, right, up = cframe.Position, cframe.LookVector, cframe.RightVector, cframe.UpVector
+
     local half = size / 2
+    local hx, hy, hz = half.X, half.Y, half.Z
 
     local corners = {
-        pos + up * half.y + look * half.z + right * half.x,
-        pos + up * half.y + look * half.z - right * half.x,
-        pos + up * half.y - look * half.z + right * half.x,
-        pos + up * half.y - look * half.z - right * half.x,
-        pos - up * half.y + look * half.z + right * half.x,
-        pos - up * half.y + look * half.z - right * half.x,
-        pos - up * half.y - look * half.z + right * half.x,
-        pos - up * half.y - look * half.z - right * half.x,
+        pos + up * hy + look * hz + right * hx,
+        pos + up * hy + look * hz - right * hx,
+        pos + up * hy - look * hz + right * hx,
+        pos + up * hy - look * hz - right * hx,
+        pos - up * hy + look * hz + right * hx,
+        pos - up * hy + look * hz - right * hx,
+        pos - up * hy - look * hz + right * hx,
+        pos - up * hy - look * hz - right * hx,
     }
 
     return corners
@@ -4682,15 +4830,16 @@ module.get_half_corners = function(cframe, size)
     local look = cframe.LookVector
 
     local half = size * 0.5
+    local hy = half.Y
 
     local r = right * half.X
     local l = look * half.Z
 
     return {
-        pos + r + l + up * half.Y,
-        pos - r + l + up * half.Y,
-        pos - r - l + up * half.Y,
-        pos + r - l + up * half.Y
+        pos + r + l + up * hy,
+        pos - r + l + up * hy,
+        pos - r - l + up * hy,
+        pos + r - l + up * hy
     }
 end
 
@@ -4716,16 +4865,16 @@ end
 module.get_animation_tracks = function(animator)
     local tracks = {}
 
-    local track_list = read_pointer(animator.Address + offsets['Animator']['TrackList'][1])
+    local track_list = read_pointer(animator.Address + module.offsets['Animator']['TrackList'][1])
     if track_list == 0 then return end
 
     local start = read_pointer(track_list)
     while start ~= 0 and start ~= track_list do
         local track = read_pointer(start + 0x10)
         if track ~= 0 then
-            local animation = read_pointer(track + offsets['AnimationTrack']['Animation'][1])
+            local animation = read_pointer(track + module.offsets['AnimationTrack']['Animation'][1])
             if animation ~= 0 then
-                local animation_id = read_string(animation + offsets['Animation']['AnimationId'][1])
+                local animation_id = read_string(animation + module.offsets['Animation']['AnimationId'][1])
                 if animation_id ~= '' then
                     tracks[#tracks + 1] = {
                         track = track,
@@ -4744,16 +4893,16 @@ end
 module.read_animation_track = function(track)
     return {
         AnimationId = track.animation_id,
-        Speed = read_float(track.track + offsets['AnimationTrack']['Speed'][1]),
-        WeightTarget = read_float(track.track + offsets['AnimationTrack']['WeightTarget'][1]),
-        TimePosition = read_float(track.track + offsets['AnimationTrack']['TimePosition'][1])
+        Speed = read_float(track.track + module.offsets['AnimationTrack']['Speed'][1]),
+        WeightTarget = read_float(track.track + module.offsets['AnimationTrack']['WeightTarget'][1]),
+        TimePosition = read_float(track.track + module.offsets['AnimationTrack']['TimePosition'][1])
     }
 end
 
 return module
 end)
-__bundle_register("libraries/paragon", function(require, _LOADED, __bundle_register, __bundle_modules)
-local font, crypt, compatibility = require("libraries/font"), require("libraries/crypt"), require("libraries/compatibility")
+__bundle_register("modules/paragon", function(require, _LOADED, __bundle_register, __bundle_modules)
+local font, crypt, compatibility = require("modules/font"), require("modules/crypt"), require("modules/compatibility")
 local screen_w, screen_h = compatibility.get_screen_size()
 
 local assets = {
@@ -4801,8 +4950,8 @@ local library = {
 local keycodes = {
     [0x02] = 'RMB',
     [0x04] = 'MMB',
-    [0x05] = 'Mouse4',
-    [0x06] = 'Mouse5',
+    -- [0x05] = 'Mouse4',
+    -- [0x06] = 'Mouse5',
 
     [0x30] = '0',
     [0x31] = '1',
@@ -5784,6 +5933,45 @@ library.multi_section = function(self, config)
     return unpack(multisection.sections)
 end
 
+library.divider = function(self, config)
+    local config = {}
+
+    local divider = {
+        type = 'divider'
+    }
+
+    local offset = 0
+    for _, element in pairs(self.actual_section:GetChildren()) do
+        offset = offset + element.size.Y + 10
+    end
+
+    local holder = Instance.new('frame', {
+        size = UDim2.new(1, 0, 0, 4),
+        position = UDim2.new(0, 0, 0, offset),
+        color = Color3.fromRGB(255, 255, 255),
+        alpha = 0,
+        parent = self.actual_section
+    })
+
+    local outline = Instance.new('frame', {
+        size = UDim2.new(1, 0, 0, 4),
+        position = UDim2.new(0, 0, 0, 0),
+        color = library.theme.inline,
+        rounding = 4,
+        parent = holder
+    })
+
+    local inner = Instance.new('frame', {
+        size = UDim2.new(1, -2, 1, -2),
+        position = UDim2.new(0, 1, 0, 1),
+        color = library.theme.outline,
+        rounding = 4,
+        parent = outline
+    })
+
+    return setmetatable(divider, {__index = library})
+end
+
 library.toggle = function(self, config)
     local config = {
         title = config.title or 'Toggle',
@@ -6497,7 +6685,20 @@ library.multi_dropdown = function(self, config)
 
     dropdown.set_items = function(items)
         config.items = items
-        dropdown.set(nil)
+
+        for _, value in pairs(dropdown.value) do
+            local found = false
+            for _, item in pairs(items) do
+                if item == value then
+                    found = true
+                    break
+                end
+            end
+
+            if not found then
+                dropdown.set(value)
+            end
+        end
     end
 
     values_outline.register(0x01, 'began', function()
@@ -6962,6 +7163,16 @@ library.textbox = function(self, config)
             end
         end
     end)
+
+    if self.holder.size.Y < offset + 51 + holder.size.Y then
+        self.holder.size = UDim2.new(1, 0, 0, offset + 51 + holder.size.Y)
+    end
+
+    local section_offset = 0
+    for _, child in pairs(self.side_holder:GetChildren()) do
+        child.position = UDim2.new(0, 0, 0, section_offset)
+        section_offset = section_offset + child.size.Y + 10
+    end
 
     textbox.set(config.value)
     return setmetatable(textbox, {__index = library})
@@ -8012,7 +8223,7 @@ compatibility.render_connection(function()
                 compatibility.draw_rect_filled(position.X, position.Y, size.X, size.Y, object.color, object.rounding or 0, object.alpha)
             elseif object.class == 'text' then
                 local position = object.absolute_position
-                compatibility.draw_text(object.text, position.X, position.Y, object.color, library.font, object.alpha)
+                compatibility.draw_text(object.text, position.X, position.Y - (compatibility.context == 'RbxCli' and 4 or 0), object.color, library.font, object.alpha)
             elseif object.class == 'gradient' then
                 local size, position = object.absolute_size, object.absolute_position
                 compatibility.draw_gradient(position.X, position.Y, size.X, size.Y, object.start, object.finish, object.horizontal, object.start_alpha or object.alpha, object.finish_alpha or object.alpha)
@@ -8029,7 +8240,8 @@ library.Vector2 = Vector2
 return library
 end)
 __bundle_register("games/phantom forces/cache", function(require, _LOADED, __bundle_register, __bundle_modules)
-local memory, library, crypt, compatibility = require("libraries/memory"), require("libraries/paragon"), require("libraries/crypt"), require("libraries/compatibility")
+local mem_api = memory
+local memory, library, crypt, compatibility = require("modules/memory"), require("modules/paragon"), require("modules/crypt"), require("modules/compatibility")
 local flags = library.flags
 
 local cache = {
@@ -10099,15 +10311,29 @@ local set_arms = function(color, transparency, reflectance, material)
     end
 end
 
+local buffer, buffer_read, buffer_write, buffer_readf32, buffer_writef32, successful = buffer, mem_api.read, mem_api.write, buffer and buffer.readf32, buffer and buffer.writef32, Enum and Enum.ProcessReadResult and Enum.ProcessReadResult.Successful
 local offset_motor = function(primitive, x, y, z)
-    local c0 = memory.get_components(primitive, memory.offsets.Motor6D.C0[1])
-    local c1 = memory.get_components(primitive, memory.offsets.Motor6D.C1[1])
+    if buffer then
+        local s0, c0 = buffer_read(primitive + memory.offsets.Motor6D.C0[1], 48)
+        local s1, c1 = buffer_read(primitive + memory.offsets.Motor6D.C1[1], 48)
 
-    c1[10] = x * c0[1] + y * c0[4] + z * c0[7]
-    c1[11] = x * c0[2] + y * c0[5] + z * c0[8]
-    c1[12] = x * c0[3] + y * c0[6] + z * c0[9]
+        if s0 == successful and s1 == successful then
+            buffer_writef32(c1, 36, x * buffer_readf32(c0, 0) + y * buffer_readf32(c0, 12) + z * buffer_readf32(c0, 24))
+            buffer_writef32(c1, 40, x * buffer_readf32(c0, 4) + y * buffer_readf32(c0, 16) + z * buffer_readf32(c0, 28))
+            buffer_writef32(c1, 44, x * buffer_readf32(c0, 8) + y * buffer_readf32(c0, 20) + z * buffer_readf32(c0, 32))
 
-    memory.write_components(primitive, memory.offsets.Motor6D.C1[1], c1)
+            buffer_write(primitive + memory.offsets.Motor6D.C1[1], c1)
+        end
+    else
+        local c0 = memory.get_components(primitive, memory.offsets.Motor6D.C0[1])
+        local c1 = memory.get_components(primitive, memory.offsets.Motor6D.C1[1])
+
+        c1[10] = x * c0[1] + y * c0[4] + z * c0[7]
+        c1[11] = x * c0[2] + y * c0[5] + z * c0[8]
+        c1[12] = x * c0[3] + y * c0[6] + z * c0[9]
+
+        memory.write_components(primitive, memory.offsets.Motor6D.C1[1], c1)
+    end
 end
 
 local v3_new = Vector3.new
@@ -10127,6 +10353,76 @@ local menu = library:window({title = 'Paragon', sub_title = 'Phantom Forces', si
         misc = compatibility.load_image(crypt.base64.decode('iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuMTGKCBbOAAAAuGVYSWZJSSoACAAAAAUAGgEFAAEAAABKAAAAGwEFAAEAAABSAAAAKAEDAAEAAAACAAAAMQECABEAAABaAAAAaYcEAAEAAABsAAAAAAAAAGAAAAABAAAAYAAAAAEAAABQYWludC5ORVQgNS4xLjExAAADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlgAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAAAGNdRzso9yOwAAADhJREFUKFPV0EEKACAIAMHd/v9nOwUlQgRBNCfRyyIcEiAiAkB1zBXVlpfXLUmVOfNB0qdfyvetDq87IAuT6OI5AAAAAElFTkSuQmCC')),
         settings = compatibility.load_image(crypt.base64.decode('iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURf///wAAAFXC034AAAACdFJOU/8A5bcwSgAAAAlwSFlzAAAOwwAADsMBx2+oZAAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIDUuMS4xMYoIFs4AAAC4ZVhJZklJKgAIAAAABQAaAQUAAQAAAEoAAAAbAQUAAQAAAFIAAAAoAQMAAQAAAAIAAAAxAQIAEQAAAFoAAABphwQAAQAAAGwAAAAAAAAAYAAAAAEAAABgAAAAAQAAAFBhaW50Lk5FVCA1LjEuMTEAAAMAAJAHAAQAAAAwMjMwAaADAAEAAAABAAAABaAEAAEAAACWAAAAAAAAAAIAAQACAAQAAABSOTgAAgAHAAQAAAAwMTAwAAAAAAY11HOyj3I7AAAAL0lEQVQYV2NgBAEGBggFQVCKkQEOIMJQNpSDICC6EYphHBRlqAbAFUOMRrIUyTkAFVQARRbh1wsAAAAASUVORK5CYII='))
     }
+
+    if compatibility.context == 'RbxCli' then
+        local p = menu:page({title = 'RbxCli', texture = assets.rbxcli})
+
+        local gcs = p:section({title = 'Garbage Collection'})
+
+        local collection = nil
+        local scan_for_collection = function()
+            for _, table in pairs(gc.getgc('table')) do
+                local entry = table.Value
+                if entry:ContainsKey('unlockrank') then
+                    collection[#collection+1] = {
+                        entry = entry,
+                        type = 'weapon',
+                        unlockrank = entry.unlockrank,
+                        firerate = entry:ContainsKey('firerate')
+                    }
+                elseif entry:ContainsKey('unlockkills') then
+                    collection[#collection+1] = {
+                        entry = entry,
+                        type = 'attachment',
+                        unlockkills = entry.unlockkills
+                    }
+                end
+            end
+        end
+
+        gcs:slider({title = 'Firerate', min = 0, max = 10000, float = 1, value = 1000, suffix = ' RPM', flag = 'gc_firerate_value'})
+        gcs:button({title = 'Set Firerate', flag = 'gc_firerate', callback = function()
+            if not collection then
+                collection = {}
+                scan_for_collection()
+            end
+
+            for _, weapon in pairs(collection) do
+                if weapon.type == 'weapon' and weapon.firerate and type(weapon.entry.firerate) == 'number' then
+                    weapon.entry.firerate = flags['gc_firerate_value']
+                end
+            end
+        end})
+
+        gcs:button({title = 'Unlock Weapons', callback = function()
+            if not collection then
+                collection = {}
+                scan_for_collection()
+            end
+
+            for _, weapon in pairs(collection) do
+                if weapon.type == 'weapon' then
+                    weapon.entry.unlockrank = 0
+                    if weapon.entry:ContainsKey('exclusiveunlock') then
+                        weapon.entry.exclusiveunlock = false
+                    end
+                end
+            end
+        end})
+
+        gcs:button({title = 'Unlock Attachments', callback = function()
+            if not collection then
+                collection = {}
+                scan_for_collection()
+            end
+
+            for _, attachment in pairs(collection) do
+                if attachment.type == 'attachment' then
+                    attachment.entry.unlockkills = 0
+                end
+            end
+        end})
+    end
 
     local pages = {
         visuals = menu:page({title = 'Visuals', texture = assets.misc}),
@@ -10227,14 +10523,12 @@ local menu = library:window({title = 'Paragon', sub_title = 'Phantom Forces', si
         local _ = skins:toggle({title = 'Weapon Skin', flag = 'weapon_skin'})
         _:colorpicker({flag = 'weapon_skin_color', color = library.theme.element, alpha = 255})
 
-        if compatibility.context == 'Serotonin' then
-            local weapon_textures = {}; do
-                for i in pairs(pf_skins) do
-                    weapon_textures[#weapon_textures+1] = i
-                end
+        local weapon_textures = {}; do
+            for i in pairs(pf_skins) do
+                weapon_textures[#weapon_textures + 1] = i
             end
-            skins:dropdown({title = 'Weapon Texture', flag = 'weapon_skin_texture', items = weapon_textures, value = 'DR Case / Access'})
         end
+        skins:dropdown({ title = 'Weapon Texture', flag = 'weapon_skin_texture', items = weapon_textures, value ='DR Case / Access' })
 
         skins:slider({title = 'Scale X', flag = 'weapon_skin_scale_x', min = 0, max = 10, value = 1, float = 0.01, suffix = 'st'})
         skins:slider({title = 'Scale Y', flag = 'weapon_skin_scale_y', min = 0, max = 10, value = 1, float = 0.01, suffix = 'st'})
@@ -10247,14 +10541,12 @@ local menu = library:window({title = 'Paragon', sub_title = 'Phantom Forces', si
         local _ = skins:toggle({title = 'Sleeves Skin', flag = 'sleeves_skin'})
         _:colorpicker({flag = 'sleeves_skin_color', color = library.theme.element, alpha = 255})
 
-        if compatibility.context == 'Serotonin' then
-            local sleeves_textures = {}; do
-                for i in pairs(pf_skins) do
-                    sleeves_textures[#sleeves_textures+1] = i
-                end
+        local sleeves_textures = {}; do
+            for i in pairs(pf_skins) do
+                sleeves_textures[#sleeves_textures+1] = i
             end
-            skins:dropdown({title = 'Sleeves Texture', flag = 'sleeves_skin_texture', items = sleeves_textures, value = 'DR Case / Access'})
         end
+        skins:dropdown({title = 'Sleeves Texture', flag = 'sleeves_skin_texture', items = sleeves_textures, value = 'DR Case / Access'})
 
         skins:slider({title = 'Scale X', flag = 'sleeves_skin_scale_x', min = 0, max = 10, value = 1, float = 0.01, suffix = 'st'})
         skins:slider({title = 'Scale Y', flag = 'sleeves_skin_scale_y', min = 0, max = 10, value = 1, float = 0.01, suffix = 'st'})
@@ -10270,40 +10562,34 @@ local menu = library:window({title = 'Paragon', sub_title = 'Phantom Forces', si
         local _ = models:toggle({title = 'Forcefield', flag = 'models_forcefield'})
         _:colorpicker({flag = 'models_forcefield_color', color = library.theme.element, alpha = 255})
 
-        if compatibility.context == 'Serotonin' then
-            models:dropdown({title = 'Head Mesh', flag = 'Head Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
-            models:dropdown({title = 'Torso Mesh', flag = 'Torso Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
-            models:dropdown({title = 'Left Arm Mesh', flag = 'Left Arm Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
-            models:dropdown({title = 'Left Leg Mesh', flag = 'Left Leg Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
-            models:dropdown({title = 'Right Arm Mesh', flag = 'Right Arm Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
-            models:dropdown({title = 'Right Leg Mesh', flag = 'Right Leg Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
-        end
+
+        models:dropdown({title = 'Head Mesh', flag = 'Head Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
+        models:dropdown({title = 'Torso Mesh', flag = 'Torso Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
+        models:dropdown({title = 'Left Arm Mesh', flag = 'Left Arm Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
+        models:dropdown({title = 'Left Leg Mesh', flag = 'Left Leg Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
+        models:dropdown({title = 'Right Arm Mesh', flag = 'Right Arm Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
+        models:dropdown({title = 'Right Leg Mesh', flag = 'Right Leg Mesh', items = {'Default', 'Junkbot', 'Davy Bazooka', 'Invisible'}, value = 'Default'})
 
         models:toggle({title = 'Hide Armor Cosmetics', flag = 'models_remove_cosmetics'})
     end
 
-    if compatibility.context == 'Serotonin' then
-        local tracers = pages.visuals:section({title = 'Bullet Tracers', side = 'left'}); do
-            local _ = tracers:toggle({title = 'Enabled', flag = 'tracers'})
-            _:colorpicker({flag = 'tracers_color1', color = library.theme.element, alpha = 255})
-            _:colorpicker({flag = 'tracers_color2', color = library.theme.element, alpha = 255})
 
-            local ttbl = {}
-            for i in pairs(textures) do
-                ttbl[#ttbl+1] = i
-            end
-            tracers:dropdown({title = 'Texture', flag = 'tracers_texture', items = ttbl, value = 'Lightning'})
+    local tracers = pages.visuals:section({ title = 'Bullet Tracers', side = 'left' }); do
+        local _ = tracers:toggle({ title = 'Enabled', flag = 'tracers' })
+        _:colorpicker({ flag = 'tracers_color1', color = library.theme.element, alpha = 255 })
+        _:colorpicker({ flag = 'tracers_color2', color = library.theme.element, alpha = 255 })
 
-            tracers:slider({title = 'Writes', flag = 'tracers_writes', min = 1, max = 10, value = 1, float = 1, suffix = ''})
+        local ttbl = {}
+        for i in pairs(textures) do
+            ttbl[#ttbl + 1] = i
         end
+        tracers:dropdown({ title = 'Texture', flag = 'tracers_texture', items = ttbl, value = 'Lightning' })
+
+        tracers:slider({ title = 'Writes', flag = 'tracers_writes', min = 1, max = 10, value = 1, float = 1, suffix = '' })
     end
 
     local settings = pages.settings:section({title = 'Configurations', side = 'full'}); do
         local list = settings:list({ flag = 'configs_list' })
-
-        if compatibility.read_file('saved_config.pfs') and compatibility.context == 'RbxCli' then
-            list.add('saved_config')
-        end
 
         for _, file in pairs(compatibility.list_files('')) do
             if file ~= 'autoload.pfs' and string.find(file, '.pfs') then
@@ -10319,13 +10605,6 @@ local menu = library:window({title = 'Paragon', sub_title = 'Phantom Forces', si
         local create = settings:button({
             title = 'Create',
             callback = function()
-                if compatibility.context == 'RbxCli' then
-                    list.add('saved_config')
-                    compatibility.write_file('saved_config.pfs', library.save())
-                    library:notify({type = 'info', title = 'Temporary Fix', description = 'Saved config to "saved_config.pfs"', duration = 3})
-                    return
-                end
-
                 local name = flags['configs_name']
                 if name and name ~= '' and string.len(name) < 20 then
                     list.add(name)
@@ -10370,12 +10649,6 @@ local menu = library:window({title = 'Paragon', sub_title = 'Phantom Forces', si
                 local selected = flags['configs_list']
                 if not selected then return end
 
-                if compatibility.context == 'RbxCli' then
-                    compatibility.write_file('saved_config.pfs', library.save())
-                    library:notify({type = 'info', title = 'Temporary Fix', description = 'Saved config to "saved_config.pfs"', duration = 3})
-                    return
-                end
-
                 compatibility.write_file(selected .. '.pfs', library.save())
                 library:notify({type = 'info', title = 'Configurations', description = string.format('Saved configuration %s', selected), duration = 3})
             end
@@ -10391,14 +10664,6 @@ local menu = library:window({title = 'Paragon', sub_title = 'Phantom Forces', si
                 library:notify({type = 'info', title = 'Configurations', description = string.format('Set auto load configuration to %s', selected), duration = 3})
             end
         })
-
-        if compatibility.context == 'RbxCli' then
-            local f = compatibility.read_file('saved_config.pfs')
-            if f then
-                library.load(f)
-                library:notify({type = 'info', title = 'Temporary Fix', description = 'Loaded config "saved_config.pfs"', duration = 3})
-            end
-        end
 
         local autoload = compatibility.read_file('autoload.pfs')
         if autoload then
@@ -10623,11 +10888,12 @@ cache.local_player = {}; do
                 if flags['vm_weapon'] or flags['weapon_skin'] or remove_textures then
                     for _, child in pairs(compatibility.get_descendants(weapon)) do
                         local sclass = child.ClassName
+                        local address = child.Address
                         if sclass == 'Texture' then
                             if remove_textures then
-                                memory.write(child.Address, 'Texture', 'ColorMapContent', 'rbxassetid://0')
+                                memory.write(address, 'Texture', 'Transparency', 1)
+                                memory.write(address, 'Texture', 'LocalTransparencyModifier', 1)
                             elseif flags['weapon_skin'] then
-                                local address = child.Address
                                 memory.write(address, 'Texture', 'Color3', skin_color)
                                 memory.write(address, 'Texture', 'ColorMapContent', skin)
                                 memory.write(address, 'Texture', 'Transparency', skin_transparency)
@@ -10638,21 +10904,21 @@ cache.local_player = {}; do
                             end
                         elseif sclass == 'Decal' then
                             if remove_textures then
-                                memory.write(child.Address, 'Decal', 'ColorMapContent', 'rbxassetid://0')
+                                memory.write(address, 'Decal', 'ColorMapContent', 'rbxassetid://0')
                             end
                         elseif sclass == 'MeshPart' or sclass == 'Part' then
                             if flags['vm_weapon'] and child.Transparency < 0.9 then
-                                local primitive = memory.read(child.Address, 'BasePart', 'Primitive')
+                                local primitive = memory.read(address, 'BasePart', 'Primitive')
                                 memory.write(primitive, 'BasePart', 'Material', material)
 
                                 local new_color = color
                                 if compatibility.context ~= 'RbxCli' then
                                     new_color = {R = color.R * 255, G = color.G * 255, B = color.B * 255}
                                 end
-                                memory.write(child.Address, 'BasePart', 'Color', new_color)
+                                memory.write(address, 'BasePart', 'Color', new_color)
 
-                                memory.write(child.Address, 'BasePart', 'Transparency', transparency)
-                                memory.write(child.Address, 'BasePart', 'Reflectance', reflectance)
+                                memory.write(address, 'BasePart', 'Transparency', transparency)
+                                memory.write(address, 'BasePart', 'Reflectance', reflectance)
                             end
                         elseif sclass == 'UnionOperation' then
                             if flags['vm_weapon'] and child.Transparency < 0.9 then
@@ -10660,15 +10926,15 @@ cache.local_player = {}; do
                                 if compatibility.context ~= 'RbxCli' then
                                     new_color = {R = color.R * 255, G = color.G * 255, B = color.B * 255}
                                 end
-                                memory.write(child.Address, 'BasePart', 'Color', new_color)
+                                memory.write(address, 'BasePart', 'Color', new_color)
 
-                                memory.write(child.Address, 'BasePart', 'Transparency', transparency)
-                                memory.write(child.Address, 'BasePart', 'Reflectance', reflectance)
+                                memory.write(address, 'BasePart', 'Transparency', transparency)
+                                memory.write(address, 'BasePart', 'Reflectance', reflectance)
 
-                                local primitive = memory.read(child.Address, 'BasePart', 'Primitive')
+                                local primitive = memory.read(address, 'BasePart', 'Primitive')
                                 memory.write(primitive, 'BasePart', 'Material', material)
 
-                                memory.write(child.Address, 'PartOperation', 'UsePartColor', 1)
+                                memory.write(address, 'PartOperation', 'UsePartColor', 1)
                             end
                         end
                     end
@@ -11585,6 +11851,8 @@ compatibility.slow_connection(function()
                 if texture:IsA('Texture') then
                     local address = texture.Address
                     memory.write(address, 'Texture', 'Color3', skin_color)
+                    print('write_string texture : ', skin, 'before : ', memory.read(address, 'Texture', 'ColorMapContent'))
+                    print('after : ', memory.read(address, 'Texture', 'ColorMapContent'))
                     memory.write(address, 'Texture', 'ColorMapContent', skin)
                     memory.write(address, 'Texture', 'Transparency', skin_transparency)
                     memory.write(address, 'Texture', 'OffsetStudsU', skin_offset_x)
